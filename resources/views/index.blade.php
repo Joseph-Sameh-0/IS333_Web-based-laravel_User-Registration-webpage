@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="../../public/css/Signing.css">
-    <link rel="stylesheet" href="../../public/css/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/Signing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 
 <body style="padding-top: 80px; margin: 0;">
@@ -109,8 +109,8 @@
     </form>
 </div>
 
-<script src="../../public/js/validations.js"></script>
-<script src="../../public/js/api_ops.js"></script>
+<script src="{{ asset ('js/validations.js') }}"></script>
+<script src="{{ asset ('js/api_ops.js') }}"></script>
 
 @include('footer')
 
