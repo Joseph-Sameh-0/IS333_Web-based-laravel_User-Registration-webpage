@@ -27,16 +27,16 @@
             <h3 style="color: #FFFFFF; margin-bottom: 15px;">Follow Us</h3>
             <div style="display: flex; gap: 12px;">
                 <a href="#" style="display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; background: #ddd; border-radius: 50%; text-decoration: none;">
-                    <img src="../../public/img/facebook.png" alt="Facebook" style="width: 18px; height: 18px; object-fit: contain;">
+                    <img src="{{ asset ('img/facebook.png')}}" alt="Facebook" style="width: 18px; height: 18px; object-fit: contain;">
                 </a>
                 <a href="#" style="display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; background: #ddd; border-radius: 50%; text-decoration: none;">
-                    <img src="../../public/img/youtube.png" alt="Youtube" style="width: 18px; height: 18px; object-fit: contain;">
+                    <img src="{{ asset ('img/youtube.png')}}" alt="Youtube" style="width: 18px; height: 18px; object-fit: contain;">
                 </a>
                 <a href="#" style="display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; background: #ddd; border-radius: 50%; text-decoration: none;">
-                    <img src="../../public/img/X.png" alt="X" style="width: 18px; height: 18px; object-fit: contain;">
+                    <img src="{{ asset ('img/X.png')}}" alt="X" style="width: 18px; height: 18px; object-fit: contain;">
                 </a>
                 <a href="#" style="display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; background: #ddd; border-radius: 50%; text-decoration: none;">
-                    <img src="../../public/img/linkedin.png" alt="Linkedin" style="width: 18px; height: 18px; object-fit: contain;">
+                    <img src="{{ asset ('img/linkedin.png')}}" alt="Linkedin" style="width: 18px; height: 18px; object-fit: contain;">
                 </a>
             </div>
         </div>
