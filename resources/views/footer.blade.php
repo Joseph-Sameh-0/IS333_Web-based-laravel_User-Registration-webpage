@@ -7,6 +7,7 @@
 
         <!-- Quick Links -->
         <div>
+
             <h3 style="color: #FFFFFF; margin-bottom: 15px;">Quick Links</h3>
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 8px;"><a href="#" style="color: #0376b8; text-decoration: none;">Privacy Policy</a></li>
@@ -44,6 +45,6 @@
 
     <!-- Copyright -->
     <div style="text-align: center; padding-top: 20px; margin-top: 30px; border-top: 1px solid #e7e7e7; color: #FFFFFF; font-size: 14px;">
-        <p>© <?php echo date("Y"); ?> Neovate University. All rights reserved.</p>
+        <p>© {{date("Y")}} Neovate University. All rights reserved.</p>
     </div>
 </footer>
