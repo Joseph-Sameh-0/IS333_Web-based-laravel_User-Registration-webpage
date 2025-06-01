@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/Signing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
-    // meta tag stores the CSRF token that Laravel generates.
+    <!-- meta tag stores the CSRF token that Laravel generates -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
