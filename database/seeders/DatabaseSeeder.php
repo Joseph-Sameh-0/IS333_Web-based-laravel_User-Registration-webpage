@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\University;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,5 +20,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+         $this->call(UniversitySeeder::class);  //to call university seeder to create 2 random records to test
     }
 }
