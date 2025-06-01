@@ -6,6 +6,7 @@ document.getElementById("checkWhatsApp").addEventListener("click", function (eve
     var whatsappNumber = whatsappInput.value.trim();
 
     var fullNumber = selectedCode + whatsappNumber;
+    // Get the CSRF token from the HTML meta tag
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     fetch("/check-whatsapp", {
