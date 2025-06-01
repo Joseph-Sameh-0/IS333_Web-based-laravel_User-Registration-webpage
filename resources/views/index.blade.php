@@ -7,6 +7,7 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="{{ asset('css/Signing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body style="padding-top: 80px; margin: 0;">
