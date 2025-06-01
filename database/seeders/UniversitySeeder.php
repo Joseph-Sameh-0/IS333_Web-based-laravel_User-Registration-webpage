@@ -13,6 +13,6 @@ class UniversitySeeder extends Seeder
      */
     public function run(): void
     {
-        University::factory()->count(2)->create();
+        University::factory()->count(2)->create();  //to create to random rows for fields specified in factory
     }
 }
