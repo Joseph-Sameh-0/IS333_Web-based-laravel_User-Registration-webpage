@@ -6,20 +6,21 @@ use Illuminate\Http\Request;
 
 class UniversityController extends Controller
 {
-    // public function index()
-    // {
-    //     $data = University::latest()->paginate(5);
-    //     return view('index', compact('data'))->with('i', (request()->input('page', 1) - 1) * 5);
-    // }
+     public function index()
+     {
+         $users = University::all();
+         return view('users.index', compact('users'));
+     }
 
     public function create()
     {
-        return view('index');
+        return view('register');
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'user_role' => 'required|in:user,admin',
             'user_name'        => 'required|unique:students,user_name',
             'full_name'        => 'required',
             'phone'            => 'required',
@@ -44,22 +45,23 @@ class UniversityController extends Controller
             'student_img'     => $imageName,
         ]);
 
-        return redirect()->route('universities.index')->with('success', 'Student added successfully.');
+        return redirect()->route('users.index')->with('success', 'Student added successfully.');
     }
 
-    // public function show(University $university)  //show students in webpage that stored in DB
-    // {
-    //     return view('show', compact('university'));
-    // }
+     public function show(University $user)  //show students in webpage that stored in DB
+     {
+         return view('user.show', compact('user'));
+     }
 
-    // public function edit(University $university) // to edit student data
-    // {
-    //     return view('edit', compact('university'));
-    // }
+     public function edit(University $user) // to edit student data
+     {
+         return view('user.edit', compact('user'));
+     }
 
     public function update(Request $request, University $university)  //like store not need for view page
     {
         $request->validate([
+            'user_role' => 'required|in:user,admin',
             'user_name'        => 'required|unique:students,user_name,' . $university->student_id . ',student_id',
             'full_name'        => 'required',
             'phone'            => 'required',
@@ -92,6 +94,6 @@ class UniversityController extends Controller
     public function destroy(University $university)
     {
         $university->delete();
-        return redirect()->route('universities.index')->with('success', 'Student deleted successfully.');
+        return redirect()->route('users.index')->with('success', 'Student deleted successfully.');
     }
 }
