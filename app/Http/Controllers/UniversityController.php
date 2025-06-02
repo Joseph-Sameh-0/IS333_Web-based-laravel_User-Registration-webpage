@@ -20,7 +20,6 @@ class UniversityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_role' => 'required|in:user,admin',
             'user_name'        => 'required|unique:students,user_name',
             'full_name'        => 'required',
             'phone'            => 'required',
@@ -61,7 +60,6 @@ class UniversityController extends Controller
     public function update(Request $request, University $university)  //like store not need for view page
     {
         $request->validate([
-            'user_role' => 'required|in:user,admin',
             'user_name'        => 'required|unique:students,user_name,' . $university->student_id . ',student_id',
             'full_name'        => 'required',
             'phone'            => 'required',
