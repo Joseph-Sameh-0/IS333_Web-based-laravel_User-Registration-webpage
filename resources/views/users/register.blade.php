@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="{{ asset('css/Signing.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+@section('title', 'Sign Up')
 
+@section('head-extra')
     <!-- meta tag stores the CSRF token that Laravel generates -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-</head>
+@endsection
 
-<body style="padding-top: 80px; margin: 0;">
+@section('content')
 <style>
   input::placeholder {
     font-size: 16px;
     font-family: "Times New Roman", Times, serif;
   }
 </style>
-@include('header')
 <div class="page">
     <form class="form-up"  id="signUpForm" method="post" enctype="multipart/form-data">
         <h1 style="text-align: center;margin-top: 0;">Welcome to Neovate University, </h1>
@@ -115,8 +109,4 @@
 <script src="{{ asset ('js/validations.js') }}"></script>
 <script src="{{ asset ('js/api_ops.js') }}"></script>
 
-@include('footer')
-
-</body>
-
-</html>
+@endsection

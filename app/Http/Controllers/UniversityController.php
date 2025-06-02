@@ -14,7 +14,7 @@ class UniversityController extends Controller
 
     public function create()
     {
-        return view('register');
+        return view('users.register');
     }
 
     public function store(Request $request)
@@ -86,7 +86,7 @@ class UniversityController extends Controller
             'student_img'     => $imageName,
         ]);
 
-        return redirect()->route('universities.index')->with('success', 'Student updated successfully.');
+        return redirect()->route('users.index')->with('success', 'Student updated successfully.');
     }
 
     public function destroy(University $university)
