@@ -25,7 +25,7 @@ class UniversityFactory extends Factory
             'address' => $this->faker->address,
             'password' => bcrypt('password'), // hashed dummy password
             'email' => $this->faker->unique()->safeEmail,
-            'student_img' => 'default.jpg', // or path to random image
+            'student_img' => 'avatar.jpg', // or path to random image
         ];
     }
 }

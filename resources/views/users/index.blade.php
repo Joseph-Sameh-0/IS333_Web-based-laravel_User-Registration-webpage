@@ -31,7 +31,7 @@
                     <th>Image</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Gender</th>
+                    <th>Role</th>
                     <th>Action</th>
                 </tr>
                 @if(count($users) > 0)
@@ -39,10 +39,10 @@
                     @foreach($users as $row)
 
                         <tr>
-                            <td><img src="{{ asset('images/' . $row->student_image) }}" width="75" /></td>
-                            <td>{{ $row->student_name }}</td>
-                            <td>{{ $row->student_email }}</td>
-                            <td>{{ $row->student_gender }}</td>
+                            <td><img src="{{ asset('images/' . $row->student_img) }}" width="75" /></td>
+                            <td>{{ $row->user_name }}</td>
+                            <td>{{ $row->email }}</td>
+                            <td>{{ $row->user_role }}</td>
                             <td>
                                 <form method="post" action="{{ route('users.destroy', $row->student_id) }}">
                                     @csrf

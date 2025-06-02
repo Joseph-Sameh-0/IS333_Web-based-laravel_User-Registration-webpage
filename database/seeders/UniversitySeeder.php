@@ -13,7 +13,7 @@ class UniversitySeeder extends Seeder
      */
     public function run(): void
     {
-        University::factory()->count(2)->create();  //to create to random rows for fields specified in factory
+        University::factory()->count(2)->create();
 
         // Manually insert admin users
         University::create([
@@ -25,7 +25,7 @@ class UniversitySeeder extends Seeder
             'address' => 'Admin Address 1',
             'password' => bcrypt('123456789'), // hashed password
             'email' => 'joseph.sameh.fouad@gmail.com',
-            'student_img' => 'default.jpg',
+            'student_img' => 'avatar.jpg',
         ]);
         // Add more admin users as needed
 

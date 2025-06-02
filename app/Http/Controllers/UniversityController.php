@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\University;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UniversityController extends Controller
 {
@@ -47,14 +48,19 @@ class UniversityController extends Controller
         return redirect()->route('users.index')->with('success', 'Student added successfully.');
     }
 
-     public function show(University $user)  //show students in webpage that stored in DB
+     public function show(String $user_id)  //show students in webpage that stored in DB
      {
-         return view('user.show', compact('user'));
+         $user = DB::table('students')->where('student_id', $user_id)->first();
+
+         if (!$user) {
+             abort(404);
+         }
+         return view('users.show', compact('user'));
      }
 
      public function edit(University $user) // to edit student data
      {
-         return view('user.edit', compact('user'));
+         return view('users.edit', compact('user'));
      }
 
     public function update(Request $request, University $university)  //like store not need for view page
