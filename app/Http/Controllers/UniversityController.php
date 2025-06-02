@@ -58,8 +58,12 @@ class UniversityController extends Controller
          return view('users.show', compact('user'));
      }
 
-     public function edit(University $user) // to edit student data
+     public function edit(String $user_id) // to edit student data
      {
+         $user = DB::table('students')->where('student_id', $user_id)->first();
+            if (!$user) {
+                abort(404);
+            }
          return view('users.edit', compact('user'));
      }
 
