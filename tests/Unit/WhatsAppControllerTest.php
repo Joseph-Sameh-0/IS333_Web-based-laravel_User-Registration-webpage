@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Http\Controllers;
+namespace Tests\Unit;
 
 use App\Http\Controllers\WhatsAppController;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Foundation\Testing\TestCase;
 
 
 class WhatsAppControllerTest extends TestCase
