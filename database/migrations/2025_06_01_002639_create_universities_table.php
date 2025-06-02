@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('user_name', 50)->unique();
             $table->string('full_name', 255);
             $table->string('phone', 20);
-            $table->string('whatsup_number', 20);
+            $table->string('whatsapp_number', 20);
             $table->text('address');
             $table->string('password', 255);
             $table->string('email', 255)->unique();
