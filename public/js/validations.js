@@ -158,26 +158,13 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
         return;
     }
 
-    // try {
-    // Wait for the WhatsApp check to complete
-    // await checkWhatsAppAsync(apiKeys);
-
-    // if (window.whatsappApiResponse === "not valid") {
-    //     whatsappInput.classList.add("is-invalid");
-    //     whatsappInput.classList.remove("is-valid");
-    //     whatsappAlert.innerHTML = "This is not a valid WhatsApp number.";
-    //     whatsappAlert.classList.remove("d-none");
-    // } else if (window.whatsappApiResponse === "valid") {
-    //     whatsappAlert.classList.add("d-none");
-    //     whatsappInput.classList.remove("is-invalid");
-    //     whatsappInput.classList.add("is-valid");
 
     // Proceed with form submission
     let formData = new FormData(this);
     formData.append("action", "register");
 
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "users", true);
+    xhr.open("POST", "/users/store", true);
     xhr.setRequestHeader("X-CSRF-TOKEN", document.querySelector('meta[name="csrf-token"]').content);
 
     xhr.onreadystatechange = function () {
@@ -194,11 +181,7 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
         }
     };
     xhr.send(formData);
-    // }
-    // } catch (error) {
-    //     console.error("Error during WhatsApp validation:", error);
-    //     alert("An error occurred while validating the WhatsApp number. Please try again.");
-    // }
+
 });
 
 

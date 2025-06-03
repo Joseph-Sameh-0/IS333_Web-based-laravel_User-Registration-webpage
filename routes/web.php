@@ -11,4 +11,6 @@ Route::get('/', function () {
 
 Route::resource('users', UniversityUsersController::class);
 
+Route::post('/users/store', [UniversityUsersController::class, 'store'])->name('users.store');
+
 Route::post('/check-whatsapp', [WhatsappController::class, 'check']);
