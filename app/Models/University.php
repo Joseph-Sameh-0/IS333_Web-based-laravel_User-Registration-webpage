@@ -9,9 +9,9 @@ class University extends Model
 {
     /** @use HasFactory<\Database\Factories\UniversityFactory> */
     protected $table = 'students';
-    protected $primaryKey = 'student_id'; // specify custom primary key
+    protected $primaryKey = 'id'; // specify custom primary key
 
-    public $incrementing = true; // if student_id is an integer and auto-incremented
+    public $incrementing = true; // if id is an integer and auto-incremented
 
     protected $keyType = 'int'; // or string, depending on your DB schema
 

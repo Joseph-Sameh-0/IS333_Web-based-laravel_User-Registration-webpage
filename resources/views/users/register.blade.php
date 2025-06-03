@@ -16,6 +16,7 @@
 </style>
 <div class="page">
     <form class="form-up"  id="signUpForm" method="post" enctype="multipart/form-data">
+        @csrf
         <h1 style="text-align: center;margin-top: 0;">Welcome to Neovate University, </h1>
         <h1 style="text-align: center;margin-top: 0;"> Sign Up Now:</h1>
 

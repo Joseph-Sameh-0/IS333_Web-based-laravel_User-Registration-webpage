@@ -17,7 +17,7 @@
 
     <div class="page">
         <form class="form-up" id="editForm" method="post" enctype="multipart/form-data"
-              action="{{ route('users.update', $user->student_id) }}">
+              action="{{ route('users.update', $user->id) }}">
 
             @csrf
             @method('PUT')

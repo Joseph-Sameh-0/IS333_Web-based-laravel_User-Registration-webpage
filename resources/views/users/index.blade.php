@@ -29,7 +29,7 @@
             <table class="table table-bordered">
                 <tr>
                     <th>Image</th>
-                    <th>Name</th>
+                    <th>UserName</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Action</th>
@@ -44,11 +44,11 @@
                             <td>{{ $row->email }}</td>
                             <td>{{ $row->user_role }}</td>
                             <td>
-                                <form method="post" action="{{ route('users.destroy', $row->student_id) }}">
+                                <form method="post" action="{{ route('users.destroy', $row->id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <a href="{{ route('users.show', $row->student_id) }}" class="btn btn-primary btn-sm">View</a>
-                                    <a href="{{ route('users.edit', $row->student_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="{{ route('users.show', $row->id) }}" class="btn btn-primary btn-sm">View</a>
+                                    <a href="{{ route('users.edit', $row->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                     <input type="submit" class="btn btn-danger btn-sm" value="Delete" />
                                 </form>
 

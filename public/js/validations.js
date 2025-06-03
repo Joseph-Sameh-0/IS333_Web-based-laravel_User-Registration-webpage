@@ -1,30 +1,28 @@
-var fullNameInput = document.getElementById("FullName");
-var nameInput = document.getElementById("signUpName");
-var emailInput = document.getElementById("signUpEmail");
-var passwordInput = document.getElementById("signUpPassword");
-var rePasswordInput = document.getElementById("signUpRePassword");
-var addressInput = document.getElementById("address");  // address input
-var phoneInput = document.getElementById("phone");     //phone input
-var phoneAlert = document.getElementById("phoneAlert");  // phone alert
-var whatsappInput = document.getElementById("whatsapp");     //whatsAPP input
-var whatsappAlert = document.getElementById("whatsappAlert");  //whatsAPP alert
-var fullNameAlert = document.getElementById("FullNameAlert");
-var nameAlert = document.getElementById("nameAlert");
-var emailAlert = document.getElementById("emailAlert");
-var passwordAlert = document.getElementById("passwordAlert");
-var repasswordAlert = document.getElementById("repasswordAlert");
-var btn = document.getElementById("signUpButton");
-var userImage = document.getElementById("userImage");
-var userImageAlart = document.getElementById("userImageAlert");
+let fullNameInput = document.getElementById("FullName");
+let nameInput = document.getElementById("signUpName");
+let emailInput = document.getElementById("signUpEmail");
+let passwordInput = document.getElementById("signUpPassword");
+let rePasswordInput = document.getElementById("signUpRePassword");
+let phoneInput = document.getElementById("phone");
+let phoneAlert = document.getElementById("phoneAlert");
+let whatsappInput = document.getElementById("whatsapp");
+let whatsappAlert = document.getElementById("whatsappAlert");
+let fullNameAlert = document.getElementById("FullNameAlert");
+let nameAlert = document.getElementById("nameAlert");
+let emailAlert = document.getElementById("emailAlert");
+let passwordAlert = document.getElementById("passwordAlert");
+let repasswordAlert = document.getElementById("repasswordAlert");
+let userImage = document.getElementById("userImage");
+let userImageAlert = document.getElementById("userImageAlert");
 
-var regexFullName = /^[a-zA-Z\s]{3,}$/; // Full Name:
-var regexUserName = /^[a-zA-Z0-9]{3,}$/; // Username:
-var regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var regexPassword = /^(?=.*\d)(?=.*[\W_])(?=.*[a-zA-Z]).{8,}$/; // Password:
-var regexPhone = /^[0-9]{10,15}$/;  // Phone
+let regexFullName = /^[a-zA-Z\s]{3,}$/;
+let regexUserName = /^[a-zA-Z0-9]{3,}$/;
+let regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+let regexPassword = /^(?=.*\d)(?=.*[\W_])(?=.*[a-zA-Z]).{8,}$/; // Password:
+let regexPhone = /^[0-9]{10,15}$/;
 
 // image upload validation
-var isImageUploaded = userImage.files.length > 0;
+let isImageUploaded = userImage.files.length > 0;
 
 
 function Valid() {
@@ -133,9 +131,9 @@ function Valid() {
     isImageUploaded = userImage.files.length > 0;
 
     if (!isImageUploaded) {
-        userImageAlart.classList.remove("d-none");
+        userImageAlert.classList.remove("d-none");
     } else {
-        userImageAlart.classList.add("d-none");
+        userImageAlert.classList.add("d-none");
     }
 }
 
@@ -160,45 +158,47 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
         return;
     }
 
-    try {
-        // Wait for the WhatsApp check to complete
-        await checkWhatsAppAsync(apiKeys);
+    // try {
+    // Wait for the WhatsApp check to complete
+    // await checkWhatsAppAsync(apiKeys);
 
-        if (window.whatsappApiResponse === "not valid") {
-            whatsappInput.classList.add("is-invalid");
-            whatsappInput.classList.remove("is-valid");
-            whatsappAlert.innerHTML = "This is not a valid WhatsApp number.";
-            whatsappAlert.classList.remove("d-none");
-        } else if (window.whatsappApiResponse === "valid") {
-            whatsappAlert.classList.add("d-none");
-            whatsappInput.classList.remove("is-invalid");
-            whatsappInput.classList.add("is-valid");
+    // if (window.whatsappApiResponse === "not valid") {
+    //     whatsappInput.classList.add("is-invalid");
+    //     whatsappInput.classList.remove("is-valid");
+    //     whatsappAlert.innerHTML = "This is not a valid WhatsApp number.";
+    //     whatsappAlert.classList.remove("d-none");
+    // } else if (window.whatsappApiResponse === "valid") {
+    //     whatsappAlert.classList.add("d-none");
+    //     whatsappInput.classList.remove("is-invalid");
+    //     whatsappInput.classList.add("is-valid");
 
-            // Proceed with form submission
-            let formData = new FormData(this);
-            formData.append("action", "register");
+    // Proceed with form submission
+    let formData = new FormData(this);
+    formData.append("action", "register");
 
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "controllers/UserController.php", true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText);
-                    let response = JSON.parse(xhr.responseText);
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "{{ route('users.store') }}", true);
+    xhr.setRequestHeader("X-CSRF-TOKEN", document.querySelector('meta[name="csrf-token"]').content);
 
-                    if (response.status === "error") {
-                        showErrors(response.errors);
-                    } else {
-                        response.message === undefined ? alert("User registered successfully") : alert(response.message);
-                        document.getElementById("signUpForm").reset(); // Reset form on success
-                    }
-                }
-            };
-            xhr.send(formData);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            let response = JSON.parse(xhr.responseText);
+
+            if (response.status === "error") {
+                showErrors(response.errors);
+            } else {
+                response.message === undefined ? alert("User registered successfully") : alert(response.message);
+                document.getElementById("signUpForm").reset(); // Reset form on success
+            }
         }
-    } catch (error) {
-        console.error("Error during WhatsApp validation:", error);
-        alert("An error occurred while validating the WhatsApp number. Please try again.");
-    }
+    };
+    xhr.send(formData);
+    // }
+    // } catch (error) {
+    //     console.error("Error during WhatsApp validation:", error);
+    //     alert("An error occurred while validating the WhatsApp number. Please try again.");
+    // }
 });
 
 
