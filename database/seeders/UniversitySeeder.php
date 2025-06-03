@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\University;
+use App\Models\UniversityUsers;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,10 +13,10 @@ class UniversitySeeder extends Seeder
      */
     public function run(): void
     {
-        University::factory()->count(2)->create();
+        UniversityUsers::factory()->count(2)->create();
 
         // Manually insert admin users
-        University::create([
+        UniversityUsers::create([
             'user_role' => 'admin',
             'user_name' => 'Joseph',
             'full_name' => 'Joseph Sameh Fouad',

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\University;
+use App\Models\UniversityUsers;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -72,7 +72,7 @@ class StudentValidationDataTest extends TestCase
     public function test_it_returns_error_when_user_name_is_not_unique()
     {
         // Create a student with a specific user_name
-        University::factory()->create([
+        UniversityUsers::factory()->create([
             'user_name' => 'ahmed11'
         ]);
 
@@ -89,6 +89,6 @@ class StudentValidationDataTest extends TestCase
 
         // Assert that validation fails on the 'user_name' field
         $response->assertSessionHasErrors('user_name');
-    
+
     }
 }

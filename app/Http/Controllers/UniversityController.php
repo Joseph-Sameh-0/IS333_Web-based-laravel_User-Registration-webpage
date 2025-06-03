@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\University;
+use App\Models\UniversityUsers;
 use Illuminate\Http\Request;
 
 class UniversityController extends Controller
 {
     public function index()
     {
-        $users = University::all();
+        $users = UniversityUsers::all();
         return view('users.index', compact('users'));
     }
 
@@ -33,26 +33,26 @@ class UniversityController extends Controller
         ]);
 
         // Check if the phone number is already in use
-        if (University::where('phone', $request->phone)->exists()) {
+        if (UniversityUsers::where('phone', $request->phone)->exists()) {
             return redirect()->back()->withErrors(['phone' => 'Phone number already in use.']);
         }
         // Check if the WhatsApp number is already in use
-        if (University::where('whatsup_number', $request->whatsup_number)->exists()) {
+        if (UniversityUsers::where('whatsup_number', $request->whatsup_number)->exists()) {
             return redirect()->back()->withErrors(['whatsup_number' => 'WhatsApp number already in use.']);
         }
         // Check if the email is already in use
-        if (University::where('email', $request->email)->exists()) {
+        if (UniversityUsers::where('email', $request->email)->exists()) {
             return redirect()->back()->withErrors(['email' => 'Email already in use.']);
         }
         // Check if the username is already in use
-        if (University::where('user_name', $request->user_name)->exists()) {
+        if (UniversityUsers::where('user_name', $request->user_name)->exists()) {
             return redirect()->back()->withErrors(['user_name' => 'Username already in use.']);
         }
 
         $imageName = time() . '.' . $request->student_img->extension();
         $request->student_img->move(public_path('images'), $imageName);
 
-        University::create([
+        UniversityUsers::create([
             'full_name' => $request->full_name,
             'user_name' => $request->user_name,
             'phone' => $request->phone,
@@ -68,7 +68,7 @@ class UniversityController extends Controller
 
     public function show(string $user_id)
     {
-        $user = University::find($user_id);
+        $user = UniversityUsers::find($user_id);
 
         if (!$user) {
             abort(404);
@@ -79,7 +79,7 @@ class UniversityController extends Controller
     public function edit(string $user_id) // to edit student data
     {
 
-        $user = University::find($user_id);
+        $user = UniversityUsers::find($user_id);
         if (!$user) {
             abort(404);
         }
@@ -89,7 +89,7 @@ class UniversityController extends Controller
 
     public function update(Request $request, string $user_id)  //like store not need for view page
     {
-        $user = University::find($user_id);
+        $user = UniversityUsers::find($user_id);
         if (!$user) {
             abort(404);
         }
@@ -132,7 +132,7 @@ class UniversityController extends Controller
         return redirect()->route('users.index')->with('success', 'Student updated successfully.');
     }
 
-    public function destroy(University $university)
+    public function destroy(UniversityUsers $university)
     {
         $university->delete();
         return redirect()->route('users.index')->with('success', 'Student deleted successfully.');
