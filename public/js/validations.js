@@ -161,7 +161,31 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
 
     // Proceed with form submission
     let formData = new FormData(this);
-    formData.append("action", "register");
+
+    // Create a new FormData object with correct keys
+    const transformedData = new FormData();
+
+    // Map form fields to Laravel expected keys
+    transformedData.append('full_name', formData.get('FullName'));
+    transformedData.append('user_name', formData.get('signUpName'));
+    transformedData.append('phone', formData.get('phone'));
+    transformedData.append('whatsup_number', formData.get('whatsappCountryCode') + formData.get('whatsapp'));
+    transformedData.append('address', formData.get('address'));
+    transformedData.append('email', formData.get('signUpEmail'));
+    transformedData.append('password', formData.get('signUpPassword'));
+    transformedData.append('confirm_password', formData.get('signUpRePassword'));
+
+    const imageFile = formData.get('userImage');
+    if (imageFile && imageFile.size > 0) {
+        transformedData.append('student_img', imageFile);
+    }
+
+    // Append CSRF token manually or use meta tag
+    transformedData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+    transformedData.append("action", "register");
+
+    console.log("Transformed form data:", Object.fromEntries(transformedData));
+
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/users/store", true);
@@ -180,7 +204,7 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
             }
         }
     };
-    xhr.send(formData);
+    xhr.send(transformedData);
 
 });
 
