@@ -23,31 +23,14 @@ class UniversityUsersController extends Controller
         $request->validate([
             'full_name' => 'required',
             'user_name' => 'required|unique:students,user_name',
-            'phone' => 'required',
-            'whatsup_number' => 'required',
+            'phone' => 'required|unique:students,phone',
+            'whatsup_number' => 'required|unique:students,whatsup_number|regex:/^\d{10,15}$/',
             'address' => 'required',
             'email' => 'required|email|unique:students,email',
             'password' => 'required|min:8',
             'confirm_password' => 'required|same:password',
             'student_img' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
-        // Check if the phone number is already in use
-        if (UniversityUsers::where('phone', $request->phone)->exists()) {
-            return redirect()->back()->withErrors(['phone' => 'Phone number already in use.']);
-        }
-        // Check if the WhatsApp number is already in use
-        if (UniversityUsers::where('whatsup_number', $request->whatsup_number)->exists()) {
-            return redirect()->back()->withErrors(['whatsup_number' => 'WhatsApp number already in use.']);
-        }
-        // Check if the email is already in use
-        if (UniversityUsers::where('email', $request->email)->exists()) {
-            return redirect()->back()->withErrors(['email' => 'Email already in use.']);
-        }
-        // Check if the username is already in use
-        if (UniversityUsers::where('user_name', $request->user_name)->exists()) {
-            return redirect()->back()->withErrors(['user_name' => 'Username already in use.']);
-        }
 
         $imageName = time() . '.' . $request->student_img->extension();
         $request->student_img->move(public_path('images'), $imageName);
@@ -97,8 +80,8 @@ class UniversityUsersController extends Controller
         $request->validate([
             'user_name' => 'required|unique:students,user_name,' . $user->id . ',id',
             'full_name' => 'required',
-            'phone' => 'required',
-            'whatsup_number' => 'required',
+            'phone' => 'required', Rule::unique('students', 'phone')->ignore($user->id),
+            'whatsup_number' => 'required', Rule::unique('students', 'whatsup_number')->ignore($user->id)->regex('/^\d{10,15}$/'),
             'address' => 'required',
             'email' => 'required|email|unique:students,email,' . $user->id . ',id',
             'current_password' => 'required',

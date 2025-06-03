@@ -177,7 +177,7 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
     formData.append("action", "register");
 
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "{{ route('users.store') }}", true);
+    xhr.open("POST", "users", true);
     xhr.setRequestHeader("X-CSRF-TOKEN", document.querySelector('meta[name="csrf-token"]').content);
 
     xhr.onreadystatechange = function () {
