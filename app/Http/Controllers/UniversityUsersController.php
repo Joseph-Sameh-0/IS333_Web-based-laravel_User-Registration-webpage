@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UniversityUsers;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UniversityUsersController extends Controller
 {
@@ -81,7 +82,7 @@ class UniversityUsersController extends Controller
             'user_name' => 'required|unique:students,user_name,' . $user->id . ',id',
             'full_name' => 'required',
             'phone' => 'required', Rule::unique('students', 'phone')->ignore($user->id),
-            'whatsup_number' => 'required', Rule::unique('students', 'whatsup_number')->ignore($user->id)->regex('/^\d{10,15}$/'),
+            'whatsup_number' => 'required', Rule::unique('students', 'whatsup_number')->ignore($user->id),
             'address' => 'required',
             'email' => 'required|email|unique:students,email,' . $user->id . ',id',
             'current_password' => 'required',
@@ -115,9 +116,13 @@ class UniversityUsersController extends Controller
         return redirect()->route('users.index')->with('success', 'Student updated successfully.');
     }
 
-    public function destroy(UniversityUsers $university)
+    public function destroy(String $user_id)
     {
-        $university->delete();
+        $user = UniversityUsers::find($user_id);
+        if (!$user) {
+            abort(404);
+        }
+        $user->delete();
         return redirect()->route('users.index')->with('success', 'Student deleted successfully.');
     }
 }
