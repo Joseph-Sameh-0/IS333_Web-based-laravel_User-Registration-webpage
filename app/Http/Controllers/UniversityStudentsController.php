@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UniversityUsers;
 use Illuminate\Http\Request;
 
-class UniversityController extends Controller
+class UniversityStudentsController extends Controller
 {
     public function index()
     {
