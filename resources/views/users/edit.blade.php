@@ -16,8 +16,7 @@
     </style>
 
     <div class="page">
-        <form class="form-up" id="editForm" method="post" enctype="multipart/form-data"
-              action="{{ route('users.update', $user->id) }}">
+        <form class="form-up" id="editForm"  method="post" enctype="multipart/form-data" action="{{ route('users.update', $user->id) }}">
 
             @csrf
             @method('PUT')
@@ -29,7 +28,7 @@
             <div>
                 <label for="FullName">Full Name:</label>
                 <input type="text" id="FullName" name="FullName" class="input" required value="{{ $user->full_name }}" onkeyup="Valid()" placeholder="Enter your Full Name">
-                <div id="FullNameAlert" class="alert alert-danger w-100 mt-2 d-none">
+                <div id="full_nameAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Minimum 3 characters, only letters and spaces allowed.
                 </div>
             </div>
@@ -38,7 +37,7 @@
             <div>
                 <label for="signUpName">Username:</label>
                 <input type="text" id="signUpName" name="signUpName" class="input" required value="{{ $user->user_name }}" onkeyup="Valid()" placeholder="Enter your Username">
-                <div id="nameAlert" class="alert alert-danger w-100 mt-2 d-none">
+                <div id="user_nameAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Minimum 3 characters, special characters not allowed
                 </div>
             </div>
@@ -68,7 +67,7 @@
                            value="{{ substr($user->whatsup_number, strlen(explode('+', $user->whatsup_number)[0])) }}"
                            onkeyup="Valid()" placeholder="Enter a valid WhatsApp number">
                 </div>
-                <div id="whatsappAlert" class="alert alert-danger w-100 mt-2 d-none">
+                <div id="whatsup_numberAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Enter a valid phone number (10-15 digits).
                 </div>
             </div>
@@ -90,19 +89,10 @@
 
             <!-- Password -->
             <div>
-                <label for="signUpPassword">New Password (leave blank to keep current):</label>
+                <label for="signUpPassword">Password:</label>
                 <input type="password" id="signUpPassword" name="signUpPassword" class="input" onkeyup="Valid()" placeholder="Create a password">
                 <div id="passwordAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Enter valid password *Minimum eight characters, at least one number and one special character*
-                </div>
-            </div>
-
-            <!-- Confirm Password -->
-            <div>
-                <label for="signUpRePassword">Confirm Password:</label>
-                <input type="password" id="signUpRePassword" name="signUpRePassword" class="input" onkeyup="Valid()" placeholder="Confirm your password">
-                <div id="repasswordAlert" class="alert alert-danger w-100 mt-2 d-none">
-                    Password doesn't match
                 </div>
             </div>
 
@@ -116,7 +106,7 @@
             <div>
                 <label for="userImage">Upload New Profile Picture:</label>
                 <input type="file" id="userImage" name="userImage" class="input" accept="image/*" onchange="Valid()">
-                <div id="userImageAlert" class="alert alert-danger w-100 mt-2 d-none">
+                <div id="student_imgAlert" class="alert alert-danger w-100 mt-2 d-none">
                     There is no Image Uploaded
                 </div>
             </div>

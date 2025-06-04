@@ -236,6 +236,103 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
 
 });
 
+document.getElementById("editForm").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    Valid();
+    isImageUploaded = userImage.files.length > 0;
+
+    // Validate inputs
+    if (!(
+        regexFullName.test(fullNameInput.value) &&
+        regexUserName.test(nameInput.value) &&
+        regexEmail.test(emailInput.value) &&
+        regexPhone.test(phoneInput.value) &&
+        regexPhone.test(whatsappInput.value) &&
+        isImageUploaded)
+    ) {
+        return;
+    }
+
+
+    // Proceed with form submission
+    let formData = new FormData(this);
+
+    // Create a new FormData object with correct keys
+    const transformedData = new FormData();
+
+    // Map form fields to Laravel expected keys
+    transformedData.append('full_name', formData.get('FullName'));
+    transformedData.append('user_name', formData.get('signUpName'));
+    transformedData.append('phone', formData.get('phone'));
+    transformedData.append('whatsup_number', formData.get('whatsappCountryCode') + formData.get('whatsapp'));
+    transformedData.append('address', formData.get('address'));
+    transformedData.append('email', formData.get('signUpEmail'));
+    transformedData.append('password', formData.get('signUpPassword'));
+
+    const imageFile = formData.get('userImage');
+    if (imageFile && imageFile.size > 0) {
+        transformedData.append('student_img', imageFile);
+    }
+
+    // Append CSRF token manually or use meta tag
+    transformedData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+    transformedData.append("action", "register");
+
+    console.log("Transformed form data:", Object.fromEntries(transformedData));
+
+    const headers = {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+    };
+
+    const url = form.getAttribute('action');
+
+    fetch(url, {
+        method: "PUT",
+        headers: headers,
+        body: transformedData
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(JSON.stringify(errorData));
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+
+            if (data.status === "error") {
+                showErrors(data.errors);
+            } else {
+                data.message === undefined ? alert("User registered successfully") : alert(data.message);
+                document.getElementById("signUpForm").reset();
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url; // or window.location.replace(data.redirect_url);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error.message);
+            try {
+                const errorDetails = JSON.parse(error.message);
+
+                if (errorDetails.errors) {
+                    showErrors(errorDetails.errors);
+                } else {
+                    alert("Error: " + error.message);
+                }
+            } catch (e) {
+                alert("Error: " + error.message);
+            }
+        });
+
+});
+
 
 // Display validation errors dynamically
 function showErrors(errors) {
