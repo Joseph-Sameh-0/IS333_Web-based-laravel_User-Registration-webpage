@@ -21,33 +21,36 @@ class UniversityUsersController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'full_name' => 'required',
-            'user_name' => 'required|unique:students,user_name',
-            'phone' => 'required|unique:students,phone',
-            'whatsup_number' => 'required|unique:students,whatsup_number|regex:/^\d{10,15}$/',
-            'address' => 'required',
-            'email' => 'required|email|unique:students,email',
-            'password' => 'required|min:8',
-            'confirm_password' => 'required|same:password',
-            'student_img' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+            $request->validate([
+                'full_name' => 'required',
+                'user_name' => 'required|unique:students,user_name',
+                'phone' => 'required|unique:students,phone',
+                'whatsup_number' => 'required|unique:students,whatsup_number|regex:/^\+?\d{10,15}$/',
+                'email' => 'required|email|unique:students,email',
+                'password' => 'required|min:8',
+                'confirm_password' => 'required|same:password',
+                'student_img' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
 
-        $imageName = time() . '.' . $request->student_img->extension();
-        $request->student_img->move(public_path('images'), $imageName);
+            $imageName = time() . '.' . $request->student_img->extension();
+            $request->student_img->move(public_path('images'), $imageName);
 
-        UniversityUsers::create([
-            'full_name' => $request->full_name,
-            'user_name' => $request->user_name,
-            'phone' => $request->phone,
-            'whatsup_number' => $request->whatsup_number,
-            'address' => $request->address,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'student_img' => $imageName,
-        ]);
+            UniversityUsers::create([
+                'full_name' => $request->full_name,
+                'user_name' => $request->user_name,
+                'phone' => $request->phone,
+                'whatsup_number' => $request->whatsup_number,
+                'address' => $request->address, // Ensure 'address' is being saved
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'student_img' => $imageName,
+            ]);
 
-        return redirect()->route('users.index')->with('success', 'Student added successfully.');
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Student registered successfully!',
+                'redirect_url' => route('users.index')
+            ], 200);
     }
 
     public function show(string $user_id)
@@ -83,7 +86,6 @@ class UniversityUsersController extends Controller
             'full_name' => 'required',
             'phone' => 'required', Rule::unique('students', 'phone')->ignore($user->id),
             'whatsup_number' => 'required', Rule::unique('students', 'whatsup_number')->ignore($user->id),
-            'address' => 'required',
             'email' => 'required|email|unique:students,email,' . $user->id . ',id',
             'current_password' => 'required',
             'password' => 'nullable|min:8',

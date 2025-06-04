@@ -6,14 +6,14 @@ let rePasswordInput = document.getElementById("signUpRePassword");
 let phoneInput = document.getElementById("phone");
 let phoneAlert = document.getElementById("phoneAlert");
 let whatsappInput = document.getElementById("whatsapp");
-let whatsappAlert = document.getElementById("whatsappAlert");
-let fullNameAlert = document.getElementById("FullNameAlert");
-let nameAlert = document.getElementById("nameAlert");
+let whatsappAlert = document.getElementById("whatsup_numberAlert");
+let fullNameAlert = document.getElementById("full_nameAlert");
+let nameAlert = document.getElementById("user_nameAlert");
 let emailAlert = document.getElementById("emailAlert");
 let passwordAlert = document.getElementById("passwordAlert");
-let repasswordAlert = document.getElementById("repasswordAlert");
+let repasswordAlert = document.getElementById("confirm_passwordAlert");
 let userImage = document.getElementById("userImage");
-let userImageAlert = document.getElementById("userImageAlert");
+let userImageAlert = document.getElementById("student_imgAlert");
 
 let regexFullName = /^[a-zA-Z\s]{3,}$/;
 let regexUserName = /^[a-zA-Z0-9]{3,}$/;
@@ -186,25 +186,53 @@ document.getElementById("signUpForm").addEventListener("submit", async function 
 
     console.log("Transformed form data:", Object.fromEntries(transformedData));
 
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/users/store", true);
-    xhr.setRequestHeader("X-CSRF-TOKEN", document.querySelector('meta[name="csrf-token"]').content);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-            let response = JSON.parse(xhr.responseText);
-
-            if (response.status === "error") {
-                showErrors(response.errors);
-            } else {
-                response.message === undefined ? alert("User registered successfully") : alert(response.message);
-                document.getElementById("signUpForm").reset(); // Reset form on success
-            }
-        }
+    const headers = {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
     };
-    xhr.send(transformedData);
+
+    fetch("/users/store", {
+        method: "POST",
+        headers: headers,
+        body: transformedData
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(JSON.stringify(errorData));
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+
+            if (data.status === "error") {
+                showErrors(data.errors);
+            } else {
+                data.message === undefined ? alert("User registered successfully") : alert(data.message);
+                document.getElementById("signUpForm").reset();
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url; // or window.location.replace(data.redirect_url);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error.message);
+            try {
+                const errorDetails = JSON.parse(error.message);
+
+                if (errorDetails.errors) {
+                    showErrors(errorDetails.errors);
+                } else {
+                    alert("Error: " + error.message);
+                }
+            } catch (e) {
+                alert("Error: " + error.message);
+            }
+        });
 
 });
 
