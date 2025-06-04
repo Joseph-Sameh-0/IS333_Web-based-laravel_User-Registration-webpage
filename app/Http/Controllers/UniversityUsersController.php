@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewUserRegistered;
+
+
 class UniversityUsersController extends Controller
 {
     public function index()
@@ -50,6 +54,7 @@ class UniversityUsersController extends Controller
                 'password' => bcrypt($request->password),
                 'student_img' => $imageName,
             ]);
+            Mail::to('20220100@stud.fci-cu.edu.eg')->send(new NewUserRegistered($request->user_name));
 
             return response()->json([
                 'status' => 'success',
@@ -128,8 +133,10 @@ class UniversityUsersController extends Controller
         $request->validate([
             'user_name' => 'required|unique:students,user_name,' . $user->id . ',id',
             'full_name' => 'required',
-            'phone' => 'required', Rule::unique('students', 'phone')->ignore($user->id),
-            'whatsup_number' => 'required', Rule::unique('students', 'whatsup_number')->ignore($user->id),
+            'phone' => 'required',
+            Rule::unique('students', 'phone')->ignore($user->id),
+            'whatsup_number' => 'required',
+            Rule::unique('students', 'whatsup_number')->ignore($user->id),
             'email' => 'required|email|unique:students,email,' . $user->id . ',id',
             'current_password' => 'required',
             'password' => 'nullable|min:8',
