@@ -9,6 +9,8 @@
 </head>
 <body>
 @include('header')
+<div style="height: 100px;"></div>
+
 @yield('content')
 @include('footer')
 

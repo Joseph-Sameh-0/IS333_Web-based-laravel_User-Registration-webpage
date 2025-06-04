@@ -2,7 +2,7 @@
 <html lang="en">
 <header>
     <nav
-        style="background-color: rgb(113, 172, 211); padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100% ; top: 0;  box-sizing: border-box;">
+        style="background-color: rgb(113, 172, 211); padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100% ; top: 0;  box-sizing: border-box; z-index: 1000">
         <div style="display: flex; align-items: center; gap: 30px; margin: 0;">
             <a href="{{url('/')}}" style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
                 <img src="{{asset ('/img/logo9.png') }}" alt="Logo"
