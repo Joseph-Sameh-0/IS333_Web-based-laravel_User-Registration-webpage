@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UniversityUsers;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -54,7 +55,15 @@ class UniversityUsersController extends Controller
                 'password' => bcrypt($request->password),
                 'student_img' => $imageName,
             ]);
-            Mail::to('20220100@stud.fci-cu.edu.eg')->send(new NewUserRegistered($request->user_name));
+
+            //            Mail::to('joseph.sameh.fouad@gmail.com')->send(new NewUserRegistered($request->user_name));
+            // Get all admin users
+            $admins = UniversityUsers::where('user_role', 'admin')->get();
+
+            // Send email to each admin asynchronously
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new NewUserRegistered($request->user_name));
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -123,50 +132,96 @@ class UniversityUsersController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, string $user_id)  //like store not need for view page
+    public function update(Request $request, string $user_id)
     {
-        $user = UniversityUsers::find($user_id);
-        if (!$user) {
-            abort(404);
+        try {
+            $user = UniversityUsers::find($user_id);
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not found'
+                ], 404);
+            }
+
+            // Verify password first
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Password verification failed',
+                    'errors' => ['current_password' => ['The provided password does not match our records.']]
+                ], 422);
+            }
+
+            $rules = [
+                'full_name' => 'sometimes|required',
+                'phone' => 'sometimes|required|unique:students,phone,' . $user_id,
+                'whatsup_number' => 'sometimes|required|unique:students,whatsup_number,' . $user_id . '|regex:/^\+?\d{10,15}$/',
+                'address' => 'sometimes|required',
+                'email' => 'sometimes|required|email|unique:students,email,' . $user_id,
+                'student_img' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048',
+                'user_role' => 'sometimes|required|in:student,teacher,admin',
+                'current_password' => 'required',
+            ];
+
+            // Only validate password fields if they're provided
+            if ($request->has('new_password')) {
+                $rules['new_password'] = 'required|min:8';
+                $rules['confirm_password'] = 'required|same:new_password';
+            }
+
+            $request->validate($rules);
+
+            $updateData = [
+                'full_name' => $request->full_name ?? $user->full_name,
+                'phone' => $request->phone ?? $user->phone,
+                'whatsup_number' => $request->whatsup_number ?? $user->whatsup_number,
+                'address' => $request->address ?? $user->address,
+                'email' => $request->email ?? $user->email,
+                'user_role' => $request->user_role ?? $user->user_role,
+            ];
+
+            // Handle image upload if provided
+            if ($request->hasFile('student_img')) {
+                // Delete old image if exists
+                if ($user->student_img && file_exists(public_path('images/' . $user->student_img))) {
+                    unlink(public_path('images/' . $user->student_img));
+                }
+
+                $imageName = time() . '.' . $request->student_img->extension();
+                $request->student_img->move(public_path('images'), $imageName);
+                $updateData['student_img'] = $imageName;
+            }
+
+            // Update password if new password provided
+            if ($request->has('new_password')) {
+                $updateData['password'] = bcrypt($request->new_password);
+            }
+
+            $user->update($updateData);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User updated successfully!',
+                'redirect_url' => route('users.index')
+            ], 200);
+
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+
+            //
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $errors
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while updating the user',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $request->validate([
-            'user_name' => 'required|unique:students,user_name,' . $user->id . ',id',
-            'full_name' => 'required',
-            'phone' => 'required',
-            Rule::unique('students', 'phone')->ignore($user->id),
-            'whatsup_number' => 'required',
-            Rule::unique('students', 'whatsup_number')->ignore($user->id),
-            'email' => 'required|email|unique:students,email,' . $user->id . ',id',
-            'current_password' => 'required',
-            'password' => 'nullable|min:8',
-            'confirm_password' => 'nullable|same:password',
-            'student_img' => 'image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        // Check if the current password matches
-        if (!password_verify($request->current_password, $user->password)) {
-            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
-        }
-        $imageName = $user->student_img;
-
-        if ($request->hasFile('student_img')) {
-            $imageName = time() . '.' . $request->student_img->extension();
-            $request->student_img->move(public_path('images'), $imageName);
-        }
-
-        $user->update([
-            'user_name' => $request->user_name,
-            'full_name' => $request->full_name,
-            'phone' => $request->phone,
-            'whatsup_number' => $request->whatsup_number,
-            'address' => $request->address,
-            'email' => $request->email,
-            'student_img' => $imageName,
-            'password' => $request->password ? bcrypt($request->password) : $user->password,
-        ]);
-
-        return redirect()->route('users.index')->with('success', 'Student updated successfully.');
     }
 
     public function destroy(string $user_id)
