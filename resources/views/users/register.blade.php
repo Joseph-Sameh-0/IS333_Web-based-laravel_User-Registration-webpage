@@ -47,7 +47,7 @@
                 <label for="countryCode"></label>
                 <label for="whatsapp">WhatsApp Number:</label>
                 <div>
-                    <select id="countryCode" name="whatsappCountryCode" class="input" required>
+                    <select id="countryCode" name="whatsappCountryCode" class="input" required onchange="Valid()">
                         <option value="+20" selected>🇪🇬 +20 (Egypt)</option>
                         <option value="+1">🇺🇸 +1 (USA)</option>
                         <option value="+44">🇬🇧 +44 (UK)</option>
@@ -57,6 +57,7 @@
 
                     <input type="tel" id="whatsapp" name="whatsapp" class="input" required onkeyup="Valid()" placeholder="Enter a valid WhatsApp number">
                 </div>
+                <small id="whatsappPreview" class="text-muted"></small>
                 <div id="whatsup_numberAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Enter a valid phone number (10-15 digits).
                 </div>

@@ -143,14 +143,22 @@ class UniversityUsersController extends Controller
                 ], 404);
             }
 
+            return response()->json([ //for debugging
+                'status' => 'error',
+                'message' => 'request data',
+                'user_id' => $user_id,
+                'data' => $request->all()
+            ], 422);
+
             // Verify password first
-            if (!Hash::check($request->current_password, $user->password)) {
+            if (!Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Password verification failed',
-                    'errors' => ['current_password' => ['The provided password does not match our records.']]
+                    'errors' => ['password' => ['The provided password does not match.']]
                 ], 422);
             }
+
 
             $rules = [
                 'full_name' => 'sometimes|required',
@@ -160,7 +168,7 @@ class UniversityUsersController extends Controller
                 'email' => 'sometimes|required|email|unique:students,email,' . $user_id,
                 'student_img' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048',
                 'user_role' => 'sometimes|required|in:student,teacher,admin',
-                'current_password' => 'required',
+                'password' => 'required',
             ];
 
             // Only validate password fields if they're provided
@@ -170,6 +178,7 @@ class UniversityUsersController extends Controller
             }
 
             $request->validate($rules);
+
 
             $updateData = [
                 'full_name' => $request->full_name ?? $user->full_name,
