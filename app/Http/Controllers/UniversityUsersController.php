@@ -143,12 +143,12 @@ class UniversityUsersController extends Controller
                 ], 404);
             }
 
-            return response()->json([ //for debugging
-                'status' => 'error',
-                'message' => 'request data',
-                'user_id' => $user_id,
-                'data' => $request->all()
-            ], 422);
+//            return response()->json([ //for debugging
+//                'status' => 'error',
+//                'message' => 'request data',
+//                'user_id' => $user_id,
+//                'data' => $request->all()
+//            ], 422);
 
             // Verify password first
             if (!Hash::check($request->password, $user->password)) {

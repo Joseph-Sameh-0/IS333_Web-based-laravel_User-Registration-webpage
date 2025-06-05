@@ -37,7 +37,7 @@
             <div>
                 <label for="signUpName">Username:</label>
                 <input type="text" id="signUpName" name="signUpName" class="input" required
-                       value="{{ $user->user_name }}" onkeyup="Valid()" placeholder="Enter your Username">
+                       value="{{ $user->user_name }}" onkeyup="Valid()" placeholder="Enter your Username" disabled>
                 <div id="user_nameAlert" class="alert alert-danger w-100 mt-2 d-none">
                     Minimum 3 characters, special characters not allowed
                 </div>

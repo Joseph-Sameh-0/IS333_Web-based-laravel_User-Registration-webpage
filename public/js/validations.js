@@ -290,10 +290,6 @@ if (editForm) {
 
         console.log("Transformed form data:", Object.fromEntries(transformedData));
 
-        fakeFormData = new FormData();
-        fakeFormData.append('full_name', "Joseph");
-        fakeFormData.append('user_name', "Joseph");
-
         const headers = {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             // 'Accept': 'application/json',
@@ -301,15 +297,15 @@ if (editForm) {
         };
 
         const userId = editForm.getAttribute('UserId');
-        const url = `/users/${userId}`;
+        const url = `/users/update/${userId}`;
 
         console.log("Sending PUT request to:", url);
         console.log(Object.fromEntries(transformedData));
 
         fetch(url, {
-            method: "PUT",
+            method: "POST",
             headers: headers,
-            body: fakeFormData
+            body: transformedData
         })
             .then(response => {
 
