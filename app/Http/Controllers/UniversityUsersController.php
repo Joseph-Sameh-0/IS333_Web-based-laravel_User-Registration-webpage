@@ -42,6 +42,29 @@ class UniversityUsersController extends Controller
                 'student_img' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
+            // Instantiate WhatsAppController to reuse its check method
+            $whatsappController = new WhatsAppController();
+
+            // Create a fake request for WhatsApp check
+            $whatsappRequest = new Request(['phone_number' => $request->whatsup_number]);
+
+            // Call the check method
+            $whatsappResponse = $whatsappController->check($whatsappRequest);
+
+            // Decode JSON response
+            $whatsappData = json_decode($whatsappResponse->getContent(), true);
+
+            // Check if WhatsApp number is valid
+            if (!isset($whatsappData['status']) || $whatsappData['status'] !== 'valid') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'The WhatsApp number is not valid.',
+                    'errors' => [
+                        'whatsup_number' => ['The WhatsApp number is not registered or invalid.']
+                    ]
+                ], 422);
+            }
+
             $imageName = time() . '.' . $request->student_img->extension();
             $request->student_img->move(public_path('images'), $imageName);
 
