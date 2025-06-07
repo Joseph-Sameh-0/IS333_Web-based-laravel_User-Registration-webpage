@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers;
+namespace Controllers;
 
 use App\Http\Controllers\WhatsAppController;
 use Illuminate\Foundation\Testing\TestCase;
