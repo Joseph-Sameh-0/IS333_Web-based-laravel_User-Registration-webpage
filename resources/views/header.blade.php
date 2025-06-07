@@ -11,10 +11,14 @@
             <p style="margin: 0; color: #FFFFFF; font-size: 24px; white-space: nowrap;">Registration Form</p>
         </div>
         <div style="display: flex; align-items: center; flex-wrap: wrap; max-width: 70%; justify-content: flex-end;">
-            <a href="{{url('/')}}" style="margin: 5px 15px; color: #FFFFFF;">Home</a>
-            <a href="#" style="margin: 5px 15px; color: #FFFFFF;">About</a>
-            <a href="#" style="margin: 5px 15px; color: #FFFFFF;">Contact Us</a>
-            <a href="{{url('/')}}" style="margin: 5px 15px; background-color: #0376b8; color: white; padding: 8px 15px; border-radius: 5px;">Login</a>
+            @php($languages = ["ar" => "Arabic", "en" => "English"])
+            <a href="{{route('lang.change', ['lang' => 'ar'])}}" style="margin: 5px 5px 5px 10px; color: #FFFFFF;">اللغة العربية</a>
+            <div style="margin: 5px 0px; color:#FFFFFF;" >|</div>
+            <a href="{{route('lang.change', ['lang' => 'en'])}}" style="margin: 5px 10px 5px 5px; color: #FFFFFF;">English</a>
+            <a href="{{url('/')}}" style="margin: 5px 15px; color: #FFFFFF;">{{ __('registration_form.HOME') }}</a>
+            <a href="#" style="margin: 5px 15px; color: #FFFFFF;">{{ __('registration_form.ABOUTUS') }}</a>
+            <a href="#" style="margin: 5px 15px; color: #FFFFFF;">{{ __('registration_form.CONTACTUS') }}</a>
+            <a href="{{url('/')}}" style="margin: 5px 15px; background-color: #0376b8; color: white; padding: 8px 15px; border-radius: 5px;">{{ __('registration_form.LOGIN') }}</a>
         </div>
     </nav>
 </header>
