@@ -8,7 +8,7 @@
                 <img src="{{asset ('/img/logo9.png') }}" alt="Logo"
                      style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
             </a>
-            <p style="margin: 0; color: #FFFFFF; font-size: 24px; white-space: nowrap;">Registration Form</p>
+            <p style="margin: 0; color: #FFFFFF; font-size: 24px; white-space: nowrap;">{{ __('registration_form.FORM') }}</p>
         </div>
         <div style="display: flex; align-items: center; flex-wrap: wrap; max-width: 70%; justify-content: flex-end;">
             @php($languages = ["ar" => "Arabic", "en" => "English"])
