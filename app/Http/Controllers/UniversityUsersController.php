@@ -16,9 +16,18 @@ use App\Mail\NewUserRegistered;
 
 class UniversityUsersController extends Controller
 {
+    protected UniversityUsers $universityUsersModel;
+    protected WhatsAppController $whatsAppController;
+
+    public function __construct(UniversityUsers $universityUsersModel, WhatsAppController $whatsAppController)
+    {
+        $this->universityUsersModel = $universityUsersModel;
+        $this->whatsAppController = $whatsAppController;
+    }
+
     public function index()
     {
-        $users = UniversityUsers::all();
+        $users = $this->universityUsersModel::all();
         return view('users.index', compact('users'));
     }
 
@@ -42,14 +51,12 @@ class UniversityUsersController extends Controller
                 'student_img' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
-            // Instantiate WhatsAppController to reuse its check method
-            $whatsappController = new WhatsAppController();
 
             // Create a fake request for WhatsApp check
             $whatsappRequest = new Request(['phone_number' => $request->whatsup_number]);
 
             // Call the check method
-            $whatsappResponse = $whatsappController->check($whatsappRequest);
+            $whatsappResponse = $this->whatsAppController->check($whatsappRequest);
 
             // Decode JSON response
             $whatsappData = json_decode($whatsappResponse->getContent(), true);
@@ -68,7 +75,7 @@ class UniversityUsersController extends Controller
             $imageName = time() . '.' . $request->student_img->extension();
             $request->student_img->move(public_path('images'), $imageName);
 
-            UniversityUsers::create([
+            $this->universityUsersModel::create([
                 'full_name' => $request->full_name,
                 'user_name' => $request->user_name,
                 'phone' => $request->phone,
@@ -81,7 +88,7 @@ class UniversityUsersController extends Controller
 
             //            Mail::to('joseph.sameh.fouad@gmail.com')->send(new NewUserRegistered($request->user_name));
             // Get all admin users
-            $admins = UniversityUsers::where('user_role', 'admin')->get();
+            $admins = $this->universityUsersModel::where('user_role', 'admin')->get();
 
             // Send email to each admin asynchronously
             foreach ($admins as $admin) {
@@ -107,7 +114,7 @@ class UniversityUsersController extends Controller
                     $randomSuffix = Str::random(3);
                     $suggestedUserName = $originalUserName . $randomSuffix;
 
-                    $isUnique = !UniversityUsers::where('user_name', $suggestedUserName)->exists();
+                    $isUnique = !$this->universityUsersModel::where('user_name', $suggestedUserName)->exists();
 
                     if ($isUnique) {
                         $uniqueSuggestions[] = $suggestedUserName;
@@ -136,7 +143,7 @@ class UniversityUsersController extends Controller
 
     public function show(string $user_id)
     {
-        $user = UniversityUsers::find($user_id);
+        $user = $this->universityUsersModel::find($user_id);
 
         if (!$user) {
             abort(404);
@@ -147,7 +154,7 @@ class UniversityUsersController extends Controller
     public function edit(string $user_id) // to edit student data
     {
 
-        $user = UniversityUsers::find($user_id);
+        $user = $this->universityUsersModel::find($user_id);
         if (!$user) {
             abort(404);
         }
@@ -158,7 +165,7 @@ class UniversityUsersController extends Controller
     public function update(Request $request, string $user_id)
     {
         try {
-            $user = UniversityUsers::find($user_id);
+            $user = $this->universityUsersModel::find($user_id);
             if (!$user) {
                 return response()->json([
                     'status' => 'error',
@@ -258,7 +265,7 @@ class UniversityUsersController extends Controller
 
     public function destroy(string $user_id)
     {
-        $user = UniversityUsers::find($user_id);
+        $user = $this->universityUsersModel::find($user_id);
         if (!$user) {
             abort(404);
         }
