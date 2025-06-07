@@ -63,7 +63,7 @@ return [
 
 
     // Footer
-    'FOOTER_EMAIL' => 'الايميل: support@site.com',
+    'FOOTER_EMAIL' => 'support@site.com :الايميل',
     'FOOTER_PHONE' => 'الهاتف: 0123456789',
     'LINKS' => 'روابط',
     'POLICY' => 'سياسة الخصوصية',
