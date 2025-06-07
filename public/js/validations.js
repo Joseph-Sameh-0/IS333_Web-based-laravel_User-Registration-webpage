@@ -45,7 +45,7 @@ function Valid() {
     // Username validation
     if (!regexUserName.test(nameInput.value)) {
         nameInput.classList.add("is-invalid");
-       // nameAlert.innerHTML = "Minimum 3 characters, special characters not allowed";
+        nameAlert.innerHTML = "Minimum 3 characters, special characters not allowed";
         nameAlert.classList.remove("d-none");
     } else {
         nameInput.classList.add("is-valid");
