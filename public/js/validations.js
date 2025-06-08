@@ -228,8 +228,8 @@ if (signupForm) {
                 }
             })
             .catch(error => {
-                console.error("Error:", error.message);
                 try {
+                    console.error("Error:", error.message);
                     const errorDetails = JSON.parse(error.message);
 
                     if (errorDetails.errors) {
