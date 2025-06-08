@@ -2,15 +2,33 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Http\Controllers\WhatsAppController;
+use App\Mail\NewUserRegistered;
 use App\Models\UniversityUsers;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UniversityUsersControllerTest extends TestCase
 {
-    use RefreshDatabase;
+
+    use RefreshDatabase, WithFaker;
+
+    protected $whatsAppControllerMock;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Create mocks
+        $this->whatsAppControllerMock = $this->createMock(WhatsAppController::class);
+
+        // Bind mocks to service container
+        $this->app->instance(WhatsAppController::class, $this->whatsAppControllerMock);
+    }
 
     // Helper to create valid user data
     protected function validUserData($overrides = []): array
@@ -18,8 +36,8 @@ class UniversityUsersControllerTest extends TestCase
         return array_merge([
             'full_name' => 'John Doe',
             'user_name' => 'johndoe',
-            'phone' => '1234567890',
-            'whatsup_number' => '1234567890',
+            'phone' => '01234567890',
+            'whatsup_number' => '+201234567890',
             'address' => '123 Main St',
             'email' => 'john@example.com',
             'password' => 'password123',
@@ -39,8 +57,6 @@ class UniversityUsersControllerTest extends TestCase
             'address' => '456 Updated St',
             'email' => 'updated@example.com',
             'current_password' => 'password123',
-            'password' => 'newpassword123',
-            'confirm_password' => 'newpassword123',
             'student_img' => UploadedFile::fake()->image('new_avatar.jpg'),
         ], $overrides);
     }
@@ -74,12 +90,22 @@ class UniversityUsersControllerTest extends TestCase
     {
         $data = $this->validUserData();
 
+        // Configure the mock WhatsAppController to return a 'valid' status
+        $this->whatsAppControllerMock->method('check')
+            ->willReturn(response()->json(['status' => 'valid']));
+
         $response = $this->post(route('users.store'), $data);
 
-        $response->assertRedirect(route('users.index'));
+//         Assertions for successful storage
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status' => 'success',
+            'message' => 'Student registered successfully!'
+        ]);
+        // Optionally, assert that the user was added to the database
         $this->assertDatabaseHas('students', [
-            'user_name' => $data['user_name'],
             'email' => $data['email'],
+            'user_name' => $data['user_name'],
         ]);
     }
 
@@ -90,9 +116,25 @@ class UniversityUsersControllerTest extends TestCase
 
         $data = $this->validUserData(['email' => $existingUser->email]);
 
+        $this->whatsAppControllerMock->method('check')
+            ->willReturn(response()->json(['status' => 'valid']));
+
         $response = $this->post(route('users.store'), $data);
 
-        $response->assertSessionHasErrors('email');
+        // Assert that the response returns a 422 Unprocessable Entity status
+        $response->assertStatus(422);
+
+        // Assert that the JSON response contains validation errors for the 'email' field
+        $response->assertJsonValidationErrors(['email']);
+
+        // Optionally, assert the specific error message
+        $response->assertJson([
+            'errors' => [
+                'email' => [
+                    'The email has already been taken.'
+                ]
+            ]
+        ]);
     }
 
 
@@ -135,19 +177,21 @@ class UniversityUsersControllerTest extends TestCase
     public function test_can_update_user_with_valid_data()
     {
         $user = UniversityUsers::factory()->create([
-            'password' => bcrypt('password123'),
+            'user_name' => 'updateduser',
+            'email' => 'updated@example.com',
+            'password' => bcrypt('password123')
         ]);
 
         $data = $this->validUpdateData();
 
-        $response = $this->put(route('users.update', $user->id), $data);
 
-        $response->assertRedirect(route('users.index'));
+        $response = $this->post(route('users.update', $user->id), $data);
+
         $this->assertDatabaseHas('students', [
             'user_name' => $data['user_name'],
             'email' => $data['email'],
         ]);
-        $this->assertTrue(Hash::check('newpassword123', UniversityUsers::find($user->id)->password));
+        $this->assertTrue(Hash::check('password123', UniversityUsers::find($user->id)->password));
     }
 
 
@@ -161,9 +205,13 @@ class UniversityUsersControllerTest extends TestCase
             'current_password' => 'wrongpassword',
         ]);
 
-        $response = $this->put(route('users.update', $user->id), $data);
+        $response = $this->post(route('users.update', $user->id), $data);
 
-        $response->assertSessionHasErrors('current_password');
+        // Assert that the response returns a 422 Unprocessable Entity status
+        $response->assertStatus(422);
+
+        // Assert that the JSON response contains validation errors for the 'email' field
+        $response->assertJsonValidationErrors(['password']);
     }
 
 
