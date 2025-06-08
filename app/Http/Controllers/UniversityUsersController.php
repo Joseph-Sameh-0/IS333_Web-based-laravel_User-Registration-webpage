@@ -43,7 +43,7 @@ class UniversityUsersController extends Controller
             $request->validate([
                 'full_name' => 'required',
                 'user_name' => 'required|unique:students,user_name',
-                'phone' => 'required|unique:students,phone',
+                'phone' => 'required|unique:students,phone|regex:/\d{10,15}$/',
                 'whatsup_number' => 'required|unique:students,whatsup_number|regex:/^\+?\d{10,15}$/',
                 'email' => 'required|email|unique:students,email',
                 'password' => 'required|min:8',
