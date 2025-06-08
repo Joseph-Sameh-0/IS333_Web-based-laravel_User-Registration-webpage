@@ -1,15 +1,13 @@
 <?php
 
-namespace Tests\Feature\Controllers;
+namespace Controllers;
 
 use App\Http\Controllers\WhatsAppController;
-use App\Mail\NewUserRegistered;
 use App\Models\UniversityUsers;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UniversityUsersControllerTest extends TestCase

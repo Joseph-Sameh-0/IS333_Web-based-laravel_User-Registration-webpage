@@ -221,11 +221,15 @@ class UniversityUsersController extends Controller
 
             // Handle image upload if provided
             if ($request->hasFile('student_img')) {
-                // Delete old image if exists
-                if ($user->student_img && file_exists(public_path('images/' . $user->student_img))) {
-                    unlink(public_path('images/' . $user->student_img));
+                // Delete old image if exists, but NOT if it's avatar.jpg
+                if ($user->student_img && $user->student_img !== 'avatar.jpg') {
+                    $oldImagePath = public_path('images/' . $user->student_img);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
                 }
 
+                // Save new image
                 $imageName = time() . '.' . $request->student_img->extension();
                 $request->student_img->move(public_path('images'), $imageName);
                 $updateData['student_img'] = $imageName;

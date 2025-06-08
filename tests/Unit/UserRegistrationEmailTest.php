@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\WhatsAppController;
 use App\Mail\NewUserRegistered;
 use App\Models\UniversityUsers;
-use App\Http\Controllers\WhatsAppController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
 
 
 class UserRegistrationEmailTest extends TestCase
@@ -17,7 +17,7 @@ class UserRegistrationEmailTest extends TestCase
     {
         parent::setUp();
 
-        //  disable middleware for these tests to diable CSRF 
+        //  disable middleware for these tests to diable CSRF
         $this->withoutMiddleware();
     }
     use RefreshDatabase;
