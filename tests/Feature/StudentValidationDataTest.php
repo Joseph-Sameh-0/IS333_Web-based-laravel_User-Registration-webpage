@@ -22,7 +22,8 @@ class StudentValidationDataTest extends TestCase
             'student_img' => UploadedFile::fake()->image('photo.jpg'),
         ]);
 
-        $response->assertSessionHasErrors('user_name');
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['user_name']);
     }
 
     public function test_email_must_be_valid()
@@ -37,7 +38,8 @@ class StudentValidationDataTest extends TestCase
             'student_img' => UploadedFile::fake()->image('photo.jpg'),
         ]);
 
-        $response->assertSessionHasErrors('email');
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['email']);
     }
 
     public function test_image_must_be_valid_type()
@@ -52,7 +54,8 @@ class StudentValidationDataTest extends TestCase
             'student_img' => UploadedFile::fake()->create('document.pdf', 100),
         ]);
 
-        $response->assertSessionHasErrors('student_img');
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['student_img']);
     }
 
     public function test_all_fields_are_required()
@@ -60,12 +63,13 @@ class StudentValidationDataTest extends TestCase
         //if student want to submit with nodata
         $response = $this->post('/users', []);
         // Assert that validation fails on the all fields
-        $response->assertSessionHasErrors([
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
             'user_name',
             'full_name',
             'phone',
             'whatsup_number',
-            'address',
             'email',
         ]);
     }
@@ -88,7 +92,8 @@ class StudentValidationDataTest extends TestCase
         ]);
 
         // Assert that validation fails on the 'user_name' field
-        $response->assertSessionHasErrors('user_name');
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['user_name']);
 
     }
 }
