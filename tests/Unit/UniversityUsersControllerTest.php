@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Tests\Unit;
 
 use App\Http\Controllers\WhatsAppController;
 use App\Models\UniversityUsers;
