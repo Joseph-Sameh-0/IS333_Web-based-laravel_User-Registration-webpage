@@ -22,7 +22,8 @@ class StudentValidationDataTest extends TestCase
             'student_img' => UploadedFile::fake()->image('photo.jpg'),
         ]);
 
-        $response->assertStatus(422);
+        $response->assertStatus(422);     // The request was well-formed (valid JSON, proper HTTP),
+                                       //  but Unprocessable Entity as the data could not be processed — usually due to validation errors.
         $response->assertJsonValidationErrors(['user_name']);
     }
 
